@@ -82,7 +82,7 @@ def main():
     # os.system('''~/.local/bin/cutadapt -a '''+ adapt1 +''' -A '''+ adapt2 +''' -m 40 -q 20,20 -o sample1'''+'''"_trimmed_1.fq" -p sample2'''+'''"_trimmed_2.fq" '''+fq1+''' '''+ fq2 +'''''') 
     # os.system('''cutadapt -a '''+ adapt1 +''' -A '''+ adapt2 +''' -m 40 -q 20,20 --cores=10 -o sample1'''+'''"_trimmed_1.fq" -p sample2'''+'''"_trimmed_2.fq" '''+fq1+''' '''+ fq2 +'''''')
     
-    cmd = f"cutadapt -a {adapt1} -A {adapt2} -m 40 -q 20,20 --cores={cores} -o sample1 _trimmed_1.fq -p sample2 _trimmed_2.fq {fq1} {fq2}"
+    cmd = f"cutadapt -a {adapt1} -A {adapt2} -m 40 -q 20,20 --cores={cores} -o sample1_trimmed_1.fq -p sample2_trimmed_2.fq {fq1} {fq2}"
     print(cmd)
     os.system(cmd)
 
