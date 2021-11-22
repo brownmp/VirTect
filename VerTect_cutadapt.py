@@ -38,12 +38,16 @@ def main():
     parser.add_argument('-F', '--adapt1',  required = True, metavar = 'adapt1', type = str, help ='The forward adapter')
     parser.add_argument('-R', '--adapt2',  required = True, metavar = 'adapt2', type = str, help ='The reverse adapter')
 
+    parser.add_argument('-C', '--cores',  required = False, metavar = 'cores', type = int, help ='number of cores to use', default=1)
+
     args = parser.parse_args()
     fq1 = os.path.abspath(args.fq1)
     fq2 = os.path.abspath(args.fq2)
 
     adapt1 = args.adapt1
     adapt2 = args.adapt2
+
+    cores = args.cores
 
   
 
@@ -75,8 +79,12 @@ def main():
     sample2=fq2.split('.')[0]
 
 
-    os.system('''~/.local/bin/cutadapt -a '''+ adapt1 +''' -A '''+ adapt2 +''' -m 40 -q 20,20 -o sample1'''+'''"_trimmed_1.fq" -p sample2'''+'''"_trimmed_2.fq" '''+fq1+''' '''+ fq2 +'''''') 
-
+    # os.system('''~/.local/bin/cutadapt -a '''+ adapt1 +''' -A '''+ adapt2 +''' -m 40 -q 20,20 -o sample1'''+'''"_trimmed_1.fq" -p sample2'''+'''"_trimmed_2.fq" '''+fq1+''' '''+ fq2 +'''''') 
+    # os.system('''cutadapt -a '''+ adapt1 +''' -A '''+ adapt2 +''' -m 40 -q 20,20 --cores=10 -o sample1'''+'''"_trimmed_1.fq" -p sample2'''+'''"_trimmed_2.fq" '''+fq1+''' '''+ fq2 +'''''')
+    
+    cmd = f"cutadapt -a {adapt1} -A {adapt2} -m 40 -q 20,20 --cores={cores} -o sample1 _trimmed_1.fq -p sample2 _trimmed_2.fq {fq1} {fq2}"
+    print(cmd)
+    os.system(cmd)
 
 if __name__ == '__main__':
     main()
