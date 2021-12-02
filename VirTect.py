@@ -122,79 +122,111 @@ def main():
     
     print ("Aligning by tophat")
     def alignment():
-        cmd1='tophat2 -o '+out+' -p '+n_thread+' -G '+gtf+' '+index_dir+' '+fq1+'  '+fq2+''
-        print 'Running ', cmd1
+        # cmd1='tophat2 -o '+out+' -p '+n_thread+' -G '+gtf+' '+index_dir+' '+fq1+'  '+fq2+''
+        cmd1=f"tophat2 -o {out} -p {n_thread} -G {gtf} {index_dir} {fq1} {fq2}"
+        print('Running ', cmd1)
         os.system(cmd1)
     alignment()
         
     def bam2fastq():
-        cmd2 ='samtools sort -n  '+out+'/unmapped.bam  -o '+out+'/unmapped_sorted.bam' 
-        print 'Running ', cmd2
+        print(  "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \
+                bam2fastq \
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        # cmd2 ='samtools sort -n  '+out+'/unmapped.bam  -o '+out+'/unmapped_sorted.bam' 
+        cmd2 = f"samtools sort -n {out}/unmapped.bam -o {out}/unmapped_sorted.bam"
+        print('Running:\n\t', cmd2)
         os.system(cmd2)    
-        cmd3='bedtools bamtofastq -i  '+out+'/unmapped_sorted.bam -fq  '+out+'/unmapped_sorted_1.fq -fq2  '+out+'/unmapped_sorted_2.fq'    
-        print 'Running ', cmd3
+
+        # cmd3='bedtools bamtofastq -i  '+out+'/unmapped_sorted.bam -fq  '+out+'/unmapped_sorted_1.fq -fq2  '+out+'/unmapped_sorted_2.fq'    
+        cmd3=f"bedtools bamtofastq -i {out} \
+                {out}/unmapped_sorted.bam \
+                -fq {out}/unmapped_sorted_1.fq \
+                -fq2 {out}/unmapped_sorted_2.fq"  
+        print('Running ', cmd3)
         os.system(cmd3)
     bam2fastq()
  
     def bwa_alignment():
-        cmd4= 'bwa mem '+index_vir+'  '+out+'/unmapped_sorted_1.fq '+out+'/unmapped_sorted_2.fq > '+out+'/unmapped_aln.sam'
-        print 'Running ', cmd4
+        print(  "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \
+                bwa_alignment \
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        # cmd4= 'bwa mem '+index_vir+'  '+out+'/unmapped_sorted_1.fq '+out+'/unmapped_sorted_2.fq > '+out+'/unmapped_aln.sam'
+        cmd4= f"bwa mem {index_vir} \
+            {out}/unmapped_sorted_1.fq \
+            {out}/unmapped_sorted_2.fq \
+            > {out}/unmapped_aln.sam"
+        print('Running ', cmd4)
         os.system(cmd4)
     bwa_alignment()
     
     def virus_detection():
-        cmd5= 'samtools view -Sb -h '+out+'/unmapped_aln.sam > '+out+'/unmapped_aln.bam'
-        print 'Running ', cmd5
+        print(  "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \
+                virus_detection \
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        # cmd5= 'samtools view -Sb -h '+out+'/unmapped_aln.sam > '+out+'/unmapped_aln.bam'
+        cmd5= f"samtools view -Sb \
+                -h {out}/unmapped_aln.sam \
+                > {out}/unmapped_aln.bam"
+        print('Running ', cmd5)
         os.system(cmd5)
 
-        cmd6= '''samtools view '''+out+"/unmapped_aln.bam"+''' | cut -f3 | sort | uniq -c | awk '{if ($1>=400) print $0}' > '''+out+"/unmapped_viruses_count.txt"+''' '''
-        print 'Running ', cmd6
+        # cmd6= '''samtools view '''+out+"/unmapped_aln.bam"+''' | cut -f3 | sort | uniq -c | awk '{if ($1>=400) print $0}' > '''+out+"/unmapped_viruses_count.txt"+''' '''
+        cmd6= f"samtools view {out}/unmapped_aln.bam | cut -f3 | sort | uniq -c | awk '\{if ($1>=400) print $0\}' > {out}/unmapped_viruses_count.txt"
+        print('Running ', cmd6)
         os.system(cmd6)
     virus_detection() 
         
     def sort():
-        cmd7= '''samtools sort '''+out+"/unmapped_aln.bam"+'''  -o '''+out+"/unmapped_aln_sorted.bam"+''' '''
+        print(  "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \
+                sort \
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        # cmd7= '''samtools sort '''+out+"/unmapped_aln.bam"+'''  -o '''+out+"/unmapped_aln_sorted.bam"+''' '''
+        cmd7= f"samtools sort {out}/unmapped_aln.bam -o {out}/unmapped_aln_sorted.bam"
         os.system(cmd7)
     sort()
     
     #
     #subprocess.call("./continuous_region.sh", shell=True)
-    os.system('''samtools depth '''+out+"/unmapped_aln_sorted.bam"+''' | awk '{if ($3>=5) print $0}' | awk '{ if ($2!=(ploc+1)) {if (ploc!=0){printf("%s %d-%d\n",$1,s,ploc);}s=$2} ploc=$2; }' > '''+out+"/continuous_region.txt"+'''  ''')
+    # f"samtools depth {out}/unmapped_aln_sorted.bam | awk '{{if ($3>=5) print $0}}'| awk '{{ if ($2!=(ploc+1)) {{if (ploc!=0){{printf( '%s %d-%d\n',$1,s,ploc);}}s=$2}} ploc=$2; }}' > {out}/continuous_region.txt"
+
+    #ploc = previous location, pchr=previous chromsome
+
+    # os.system('''samtools depth '''+out+"/unmapped_aln_sorted.bam"+''' | awk '{if ($3>=5) print $0}' | awk '{ if ($2!=(ploc+1)) {if (ploc!=0){printf("%s %d-%d\n",$1,s,ploc);}s=$2} ploc=$2; }' > '''+out+"/continuous_region.txt"+'''  ''')
     
-    print ("The continous length")
-    file =open(out+"/continuous_region.txt", "r")
+    # print ("The continous length")
+    # file =open(out+"/continuous_region.txt", "r")
 
-    out_put =open(out+"/Final_continous_region.txt", "w")
+    # out_put =open(out+"/Final_continous_region.txt", "w")
     
-    if (os.fstat(file.fileno()).st_size) >0:
-            for i in file.readlines():
-                i1=i.split()[0]
-                i2=i.split()[1]
-                j1=i2.split("-")
-                j2=int(j1[1])-int(j1[0])
+    # if (os.fstat(file.fileno()).st_size) >0:
+    #         for i in file.readlines():
+    #             i1=i.split()[0]
+    #             i2=i.split()[1]
+    #             j1=i2.split("-")
+    #             j2=int(j1[1])-int(j1[0])
 
 
-                if j2 >= distance:
-                    j3=i1 + "\t" +  str(j1[0]) + '\t' +  str(j1[1])
-                    out_put.write('%s\n' % j3)
+    #             if j2 >= distance:
+    #                 j3=i1 + "\t" +  str(j1[0]) + '\t' +  str(j1[1])
+    #                 out_put.write('%s\n' % j3)
                    
-                else:
-                    pass
-    else:
-        pass 
-    out_put.close()
+    #             else:
+    #                 pass
+    # else:
+    #     pass 
+    # out_put.close()
         
 
-    final_output=open(out+"/Final_continous_region.txt",'r')
-    if (os.fstat(final_output.fileno()).st_size) >0:
-        print ("----------------------------------------Note: The sample may have some real virus :(-----------------------------------------------------")
-        headers = 'virus transcript_start transcript_end'.split()
-        for line in fileinput.input([out+'/Final_continous_region.txt'], inplace=True):
-            if fileinput.isfirstline():
-                print '\t'.join(headers)
-            print line.strip()
-    else:
-        print ("----------------------------------------Note: There is no real virus in the sample :)-----------------------------------------------------")
+    # final_output=open(out+"/Final_continous_region.txt",'r')
+    # if (os.fstat(final_output.fileno()).st_size) >0:
+    #     print ("----------------------------------------Note: The sample may have some real virus :(-----------------------------------------------------")
+    #     headers = 'virus transcript_start transcript_end'.split()
+    #     for line in fileinput.input([out+'/Final_continous_region.txt'], inplace=True):
+    #         if fileinput.isfirstline():
+    #             print '\t'.join(headers)
+    #         print line.strip()
+    # else:
+    #     print ("----------------------------------------Note: There is no real virus in the sample :)-----------------------------------------------------")
 
 if __name__ == '__main__':
     main()
