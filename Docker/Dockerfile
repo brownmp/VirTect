@@ -31,9 +31,9 @@ RUN apt-get -qq update && apt-get -qq -y install --no-install-recommends \
     make \
     pbzip2 \
     pigz \
-    python \
-    python-pip \
-    python-setuptools \
+    python3 \
+    python3-pip \
+    python3-setuptools \
     r-base \
     unzip \
     wget \
@@ -43,19 +43,23 @@ RUN apt-get -qq update && apt-get -qq -y install --no-install-recommends \
     zlibc
 
 # make python3 be the default python
-RUN ln -sf /usr/bin/python2 /usr/bin/python
+RUN ln -sf /usr/bin/python3 /usr/bin/python
+
 
 #~~~~~~~~~~~
 # Python 
 #~~~~~~~~~~~
-RUN pip install --upgrade pip && pip install \
-	argparse==1.4.0
+RUN pip3 install --upgrade pip && pip install \
+	argparse==1.4.0 \
+    cutadapt
 
 #~~~~~~~~~~~
 # Environmental Variables 
 #~~~~~~~~~~~
 ENV SRC /usr/local/src
 ENV BIN /usr/local/bin
+
+
 
 #~~~~~~~~~~~
 ## Samtools
@@ -120,3 +124,5 @@ RUN apt-get -qq -y remove automake build-essential cmake curl git gcc g++ wget &
     apt-get -qq -y autoremove && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /var/log/dpkg.log
+
+

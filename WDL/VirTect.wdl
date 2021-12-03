@@ -36,7 +36,7 @@ task RunCutadapt {
         fi
 
 
-        python3 /usr/local/src/VirTect/VerTect_cutadapt.py \
+        python /usr/local/src/VirTect/VerTect_cutadapt.py \
                 -1 ~{fastq1} \
                 -2 ~{fastq2} \
                 -F "AGATCGGAAGAG" \
@@ -66,7 +66,7 @@ task RunVirTect {
         File? fastq2
         
         File Virus_Reference
-        File Human_Reference
+        String Human_Reference
         File GTF_Reference
 
         Int cpus
@@ -99,7 +99,7 @@ task RunVirTect {
         #~~~~~~~~~~~~~~~
         # VirTect
         #~~~~~~~~~~~~~~~
-        python /usr/local/src/VirTect/VirTect.py \
+        python3 /usr/local/src/VirTect/VirTect.py \
                 -t 12 \
                 -1 ~{fastq1} \
                 -2 ~{fastq2} \
@@ -135,7 +135,7 @@ task RunVirTect {
 # Workflow
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-workflow VerTect {
+workflow VirTect {
     input {
 
         #~~~~~~~~~~~~
@@ -158,7 +158,7 @@ workflow VerTect {
         # Directories 
         #~~~~~~~~~~~~
         File Virus_Reference
-        File Human_Reference
+        String Human_Reference
         File GTF_Reference
 
         #~~~~~~~~~~~~
@@ -191,12 +191,16 @@ workflow VerTect {
 
     call RunVirTect{
         input:
-            fastq1      = RunCutadapt.fastq1_out,
-            fastq2      = RunCutadapt.fastq2_out,
-            cpus        = cpus,
-            preemptible = preemptible,
-            docker      = docker,
-            sample_id   = sample_id
+            fastq1          = RunCutadapt.fastq1_out,
+            fastq2          = RunCutadapt.fastq2_out,
+            Virus_Reference = Virus_Reference,
+            Human_Reference = Human_Reference,
+            GTF_Reference   = GTF_Reference,
+
+            cpus            = cpus,
+            preemptible     = preemptible,
+            docker          = docker,
+            sample_id       = sample_id
     }
 
     
