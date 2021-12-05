@@ -5,7 +5,7 @@
 # Description: python script for trimming of RNA-seq data using cutadapt 
 ##################################################################################
 
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
 import argparse

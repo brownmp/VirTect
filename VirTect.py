@@ -5,7 +5,7 @@
 # Description: python script for virus detection from human RNA-seq samples
 ##################################################################################
 
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
 import argparse
