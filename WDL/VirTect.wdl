@@ -57,6 +57,7 @@ task RunCutadapt {
         memory: "10GB"
     }
 }
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # create the task RunVirTect
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -66,7 +67,7 @@ task RunVirTect {
         File? fastq2
         
         File Virus_Reference
-        String Human_Reference
+        File Human_Reference
         File GTF_Reference
 
         Int cpus
@@ -158,7 +159,7 @@ workflow VirTect {
         # Directories 
         #~~~~~~~~~~~~
         File Virus_Reference
-        String Human_Reference
+        File Human_Reference
         File GTF_Reference
 
         #~~~~~~~~~~~~
