@@ -346,7 +346,7 @@ task ContinuousRegion {
         # Samtools
         #~~~~~~~~~~~~~~~
         cmd7= f"samtools sort \
-            ~{unmapped_aln.bam} \
+            ~{unmapped_aln_bam} \
             -o unmapped_aln_sorted.bam"
 
         samtools depth unmapped_aln_sorted.bam | awk '{if ($3>=5) print $0}'| awk '{ if ($2!=(ploc+1)) {if (ploc!=0){printf( "%s %d-%d\n",$1,s,ploc);}s=$2} ploc=$2; }' \
@@ -398,7 +398,7 @@ task ContinuousRegion {
 
     runtime {
         preemptible: preemptible
-        disks: "local-disk " + ceil(size(unmapped_aln_sam, "GB")*2 ) + " HDD"
+        disks: "local-disk " + ceil(size(unmapped_aln_bam, "GB")*2 ) + " HDD"
         docker: docker
         cpu: cpus
         memory: "10GB"
