@@ -36,7 +36,7 @@ task RunCutadapt {
         fi
 
 
-        python /usr/local/src/VirTect/VerTect_cutadapt.py \
+        python3 /usr/local/src/VirTect/VerTect_cutadapt.py \
                 -1 ~{fastq1} \
                 -2 ~{fastq2} \
                 -F "AGATCGGAAGAG" \
