@@ -110,7 +110,7 @@ task RunVirTect {
                 -2 ~{fastq2} \
                 -o ~{prefix} \
                 -ucsc_gene ~{GTF_Reference} \
-                -index GRCh38.genome \
+                -index GRCh38.genome.fa \
                 -index_vir ~{Virus_Reference} \
                 -d 200 \
                 --n_thread ~{cpus}
