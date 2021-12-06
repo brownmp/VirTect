@@ -393,7 +393,7 @@ task ContinuousRegion {
 
     output {
         File unmapped_aln_sorted_bam = "unmapped_aln_sorted.bam"
-        File continuous_region = continuous_region.txt
+        File continuous_region = "continuous_region.txt"
     }
 
     runtime {
