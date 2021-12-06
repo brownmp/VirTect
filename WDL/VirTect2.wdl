@@ -239,13 +239,13 @@ task RunTopHat {
     >>>
 
     output {
-        File unmapped.bam = "OUTPUT/unmapped.bam"
-        File accepted_hits.bam = "OUTPUT/accepted_hits.bam"
-        File junctions.bed = "OUTPUT/junctions.bed"
-        File deletions.bed = "OUTPUT/deletions.bed"
-        File insertions.bed = "OUTPUT/insertions.bed"
-        File align_summary.txt = "OUTPUT/align_summary.txt"
-        File prep_reads.info = "OUTPUT/prep_reads.info"
+        File unmapped_bam = "OUTPUT/unmapped.bam"
+        File accepted_hits_bam = "OUTPUT/accepted_hits.bam"
+        File junctions_bed = "OUTPUT/junctions.bed"
+        File deletions_bed = "OUTPUT/deletions.bed"
+        File insertions_bed = "OUTPUT/insertions.bed"
+        File align_summary_txt = "OUTPUT/align_summary.txt"
+        File prep_reads_info = "OUTPUT/prep_reads.info"
     }
 
     runtime {
