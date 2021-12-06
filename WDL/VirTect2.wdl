@@ -270,7 +270,6 @@ task bam2fastq {
         File GTF_Reference
 
         File unmapped_bam
-        File unmapped_sorted_bam
 
         Int cpus
         Int preemptible
@@ -292,15 +291,16 @@ task bam2fastq {
         #~~~~~~~~~~~~~~~
         samtools sort \
             -n ~{unmapped_bam} \
-            -o ~{unmapped_sorted_bam}
+            -o unmapped_sorted.bam
 
         #~~~~~~~~~~~~~~~
-        # BWA
+        # Bedtools 
         #~~~~~~~~~~~~~~~
-        bwa mem ~{Virus_Reference} \
-            unmapped_sorted_1.fq \
-            unmapped_sorted_2.fq \
-            > unmapped_aln.sam
+
+        bedtools bamtofastq -i . \
+                unmapped_sorted.bam \
+                -fq unmapped_sorted_1.fq \
+                -fq2 unmapped_sorted_2.fq
 
     >>>
 
@@ -404,7 +404,6 @@ workflow VirTect {
         input:
         
             unmapped_bam = RunTopHat.unmapped_bam
-            unmapped_sorted_bam = RunTopHat.unmapped_sorted_bam
 
             Virus_Reference = Virus_Reference,
             Human_Reference = Human_Reference,
