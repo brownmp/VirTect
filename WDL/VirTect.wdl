@@ -96,7 +96,7 @@ task RunVirTect {
             fastq2=$fastqs[1]
         fi
 
-        #mv ~{sep=' ' fwd_bowtie2_index_files} $REF_DIR
+        
         
         # Untar the references  
         tar -zxvf $Human_Reference
