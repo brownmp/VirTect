@@ -70,7 +70,7 @@ task RunVirTect {
         #File Human_Reference
         File GTF_Reference
 
-        ref_fasta = ref_fasta
+        File ref_fasta
 
         Int cpus
         Int preemptible
