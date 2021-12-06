@@ -99,7 +99,7 @@ task RunVirTect {
         
         
         # Untar the references  
-        tar -zxvf $Human_Reference
+        tar -xvf ~{Human_Reference}
 
         #~~~~~~~~~~~~~~~
         # VirTect
@@ -109,9 +109,9 @@ task RunVirTect {
                 -1 ~{fastq1} \
                 -2 ~{fastq2} \
                 -o ~{prefix} \
-                -ucsc_gene $GTF_Reference \
+                -ucsc_gene ~{GTF_Reference} \
                 -index GRCh38.genome \
-                -index_vir $Virus_Reference \
+                -index_vir ~{Virus_Reference} \
                 -d 200 \
                 --n_thread ~{cpus}
 
