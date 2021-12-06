@@ -380,7 +380,7 @@ task ContinuousRegion {
             if (os.fstat(final_output.fileno()).st_size) >0:
                 print ("----------------------------------------Note: The sample may have some real virus :(-----------------------------------------------------")
                 headers = 'virus transcript_start transcript_end'.split()
-                for line in fileinput.input([out+'/Final_continous_region.txt'], inplace=True):
+                for line in fileinput.input(['/Final_continous_region.txt'], inplace=True):
                     if fileinput.isfirstline():
                         print '\t'.join(headers)
                     print line.strip()
@@ -519,7 +519,7 @@ workflow VirTect {
 
     call VirusDetection {
         input:
-            unmapped_aln_sam = BWA.unmapped_aln_sam
+            unmapped_aln_sam = BWA.unmapped_aln_sam,
 
             Virus_Reference = Virus_Reference,
             Human_Reference = Human_Reference,
