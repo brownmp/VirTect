@@ -67,8 +67,10 @@ task RunVirTect {
         File? fastq2
         
         File Virus_Reference
-        File Human_Reference
+        #File Human_Reference
         File GTF_Reference
+
+        ref_fasta = ref_fasta
 
         Int cpus
         Int preemptible
@@ -106,7 +108,7 @@ task RunVirTect {
                 -2 ~{fastq2} \
                 -o ~{prefix} \
                 -ucsc_gene ~{GTF_Reference} \
-                -index ~{Human_Reference} \
+                -index ~{ref_fasta} \
                 -index_vir ~{Virus_Reference} \
                 -d 200 \
                 --n_thread ~{cpus}
@@ -159,8 +161,13 @@ workflow VirTect {
         # Directories 
         #~~~~~~~~~~~~
         File Virus_Reference
-        File Human_Reference
+        #File Human_Reference
         File GTF_Reference
+
+        #~~~~~~~~~~~~
+        # References
+        #~~~~~~~~~~~~
+        File ref_fasta
 
         #~~~~~~~~~~~~
         # general runtime settings
@@ -195,8 +202,11 @@ workflow VirTect {
             fastq1          = RunCutadapt.fastq1_out,
             fastq2          = RunCutadapt.fastq2_out,
             Virus_Reference = Virus_Reference,
-            Human_Reference = Human_Reference,
+            #Human_Reference = Human_Reference,
             GTF_Reference   = GTF_Reference,
+
+            ref_fasta = ref_fasta
+            
 
             cpus            = cpus,
             preemptible     = preemptible,
