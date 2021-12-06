@@ -70,8 +70,6 @@ task RunVirTect {
         File Human_Reference
         File GTF_Reference
 
-        #File ref_fasta
-
         Int cpus
         Int preemptible
         String docker
@@ -101,7 +99,7 @@ task RunVirTect {
         #mv ~{sep=' ' fwd_bowtie2_index_files} $REF_DIR
         
         # Untar the references  
-        tar -zxvf Human_Reference
+        tar -zxvf $Human_Reference
 
         #~~~~~~~~~~~~~~~
         # VirTect
@@ -208,8 +206,6 @@ workflow VirTect {
             Virus_Reference = Virus_Reference,
             Human_Reference = Human_Reference,
             GTF_Reference   = GTF_Reference,
-
-            #ref_fasta = ref_fasta
             
 
             cpus            = cpus,
