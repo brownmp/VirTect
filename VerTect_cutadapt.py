@@ -1,11 +1,4 @@
-##################################################################################
-# Author: Atlas Khan (ak4046@cumc.columbia.edu)
-# Created Time: 2017-05-31
-# Wang genomics lab http://wglab.org/
-# Description: python script for trimming of RNA-seq data using cutadapt 
-##################################################################################
-
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import sys
 import argparse
