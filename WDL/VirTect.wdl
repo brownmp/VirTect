@@ -101,6 +101,8 @@ task RunVirTect {
         # Untar the references  
         tar -xvf ~{Human_Reference}
 
+        cp ~{GTF_Reference} .
+
         #~~~~~~~~~~~~~~~
         # VirTect
         #~~~~~~~~~~~~~~~
