@@ -298,7 +298,7 @@ task VirusDetection {
     >>>
 
     output {
-        File unmapped_aln_bam = unmapped_aln.bam
+        File unmapped_aln_bam = "unmapped_aln.bam"
         File unmapped_viruses_count = "unmapped_viruses_count.txt"
     }
 
