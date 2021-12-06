@@ -403,7 +403,7 @@ workflow VirTect {
     call bam2fastq{
         input:
         
-            unmapped_bam = RunTopHat.unmapped_bam
+            unmapped_bam = RunTopHat.unmapped_bam,
 
             Virus_Reference = Virus_Reference,
             Human_Reference = Human_Reference,
