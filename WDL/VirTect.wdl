@@ -101,7 +101,7 @@ task RunVirTect {
         #mv ~{sep=' ' fwd_bowtie2_index_files} $REF_DIR
         
         # Untar the references  
-        # tar -zxvf ref_fasta
+        tar -zxvf Human_Reference
 
         #~~~~~~~~~~~~~~~
         # VirTect
@@ -112,7 +112,7 @@ task RunVirTect {
                 -2 ~{fastq2} \
                 -o ~{prefix} \
                 -ucsc_gene $GTF_Reference \
-                -index $Human_Reference \
+                -index GRCh38.genome \
                 -index_vir $Virus_Reference \
                 -d 200 \
                 --n_thread ~{cpus}
