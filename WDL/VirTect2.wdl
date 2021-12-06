@@ -209,8 +209,6 @@ task BWA {
         File Human_Reference
         File GTF_Reference
 
-        File unmapped_bam
-
         Int cpus
         Int preemptible
         String docker
