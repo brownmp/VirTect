@@ -533,7 +533,7 @@ workflow VirTect {
 
     call ContinuousRegion {
         input:
-            unmapped_aln_bam = VirusDetection.unmapped_aln_bam
+            unmapped_aln_bam = VirusDetection.unmapped_aln_bam,
 
             Virus_Reference = Virus_Reference,
             Human_Reference = Human_Reference,
