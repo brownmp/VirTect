@@ -224,7 +224,7 @@ task BWA {
         set -e
 
         # Untar the references  
-        # tar -xvf ~{Human_Reference}
+        tar -xvf ~{Human_Reference}
         cp ~{Virus_Reference} .
 
 
@@ -233,7 +233,7 @@ task BWA {
         #~~~~~~~~~~~~~~~
 
         bwa mem \
-            ~{Virus_Reference} \
+            viruses_757.fasta \
             ~{unmapped_sorted_1} \
             ~{unmapped_sorted_2} \
             > unmapped_aln.sam
