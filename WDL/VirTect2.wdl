@@ -352,6 +352,13 @@ task ContinuousRegion {
 
         python <<CODE
 
+        import sys
+        import argparse
+        import os
+        import subprocess
+        import os.path
+        import fileinput
+
         print("The continous length")
         file =open("continuous_region.txt", "r")
         out_put =open("Final_continous_region.txt", "w")
