@@ -361,7 +361,7 @@ task ContinuousRegion {
         import os.path
         import fileinput
 
-        distance = ~{}
+        distance = ~{Distance}
 
         print("The continous length")
         file =open("continuous_region.txt", "r")
