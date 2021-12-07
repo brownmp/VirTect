@@ -181,7 +181,7 @@ task bam2fastq {
 
     output {
         File unmapped_sorted_1 = "unmapped_sorted_1.fq"
-        File unmapped_sorted_2 = "unmapped_sorted_1.fq"
+        File unmapped_sorted_2 = "unmapped_sorted_2.fq"
     }
 
     runtime {
@@ -222,6 +222,10 @@ task BWA {
     command <<<
 
         set -e
+
+        # Untar the references  
+        # tar -xvf ~{Human_Reference}
+        cp ~{Virus_Reference} .
 
 
         #~~~~~~~~~~~~~~~
