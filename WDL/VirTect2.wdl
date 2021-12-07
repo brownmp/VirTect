@@ -352,37 +352,37 @@ task ContinuousRegion {
 
         python <<CODE
 
-            print ("The continous length")
-            file =open("continuous_region.txt", "r")
-            out_put =open("Final_continous_region.txt", "w")
+        print("The continous length")
+        file =open("continuous_region.txt", "r")
+        out_put =open("Final_continous_region.txt", "w")
+        
+        if (os.fstat(file.fileno()).st_size) >0:
+                for i in file.readlines():
+                    i1=i.split()[0]
+                    i2=i.split()[1]
+                    j1=i2.split("-")
+                    j2=int(j1[1])-int(j1[0])
+
+                    if j2 >= distance:
+                        j3=i1 + "\t" +  str(j1[0]) + '\t' +  str(j1[1])
+                        out_put.write('%s\n' % j3)
+                    else:
+                        pass
+        else:
+            pass 
+        out_put.close()
             
-            if (os.fstat(file.fileno()).st_size) >0:
-                    for i in file.readlines():
-                        i1=i.split()[0]
-                        i2=i.split()[1]
-                        j1=i2.split("-")
-                        j2=int(j1[1])-int(j1[0])
 
-                        if j2 >= distance:
-                            j3=i1 + "\t" +  str(j1[0]) + '\t' +  str(j1[1])
-                            out_put.write('%s\n' % j3)
-                        else:
-                            pass
-            else:
-                pass 
-            out_put.close()
-                
-
-            final_output=open("/Final_continous_region.txt",'r')
-            if (os.fstat(final_output.fileno()).st_size) >0:
-                print ("----------------------------------------Note: The sample may have some real virus :(-----------------------------------------------------")
-                headers = 'virus transcript_start transcript_end'.split()
-                for line in fileinput.input(['/Final_continous_region.txt'], inplace=True):
-                    if fileinput.isfirstline():
-                        print '\t'.join(headers)
-                    print line.strip()
-            else:
-                print ("----------------------------------------Note: There is no real virus in the sample :)-----------------------------------------------------")
+        final_output=open("/Final_continous_region.txt",'r')
+        if (os.fstat(final_output.fileno()).st_size) >0 :
+            print("----------------------------------------Note: The sample may have some real virus :(-----------------------------------------------------")
+            headers = 'virus transcript_start transcript_end'.split()
+            for line in fileinput.input(['/Final_continous_region.txt'], inplace=True):
+                if fileinput.isfirstline():
+                    print('\t'.join(headers))
+                print(line.strip())
+        else:
+            print("----------------------------------------Note: There is no real virus in the sample :)-----------------------------------------------------")
 
         CODE
 
