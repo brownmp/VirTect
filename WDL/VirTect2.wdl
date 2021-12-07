@@ -339,7 +339,6 @@ task ContinuousRegion {
 
         set -e
 
-
         #~~~~~~~~~~~~~~~
         # Samtools
         #~~~~~~~~~~~~~~~
@@ -348,14 +347,14 @@ task ContinuousRegion {
             -o unmapped_aln_sorted.bam"
 
         samtools depth unmapped_aln_sorted.bam | awk '{if ($3>=5) print $0}'| awk '{ if ($2!=(ploc+1)) {if (ploc!=0){printf( "%s %d-%d\n",$1,s,ploc);}s=$2} ploc=$2; }' \
-            > ~{prefix}/continuous_region.txt
+            > continuous_region.txt
 
 
         python <<CODE
 
             print ("The continous length")
-            file =open("/continuous_region.txt", "r")
-            out_put =open("/Final_continous_region.txt", "w")
+            file =open("continuous_region.txt", "r")
+            out_put =open("Final_continous_region.txt", "w")
             
             if (os.fstat(file.fileno()).st_size) >0:
                     for i in file.readlines():
