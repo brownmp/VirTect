@@ -424,7 +424,7 @@ workflow VirTect {
         #~~~~~~~~~~~~
         # CPU count 
         #~~~~~~~~~~~~
-        Int cpus = 1
+        Int cpus = 10
 
         #~~~~~~~~~~~~
         # Directories 
