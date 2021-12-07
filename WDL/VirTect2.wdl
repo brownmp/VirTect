@@ -342,9 +342,9 @@ task ContinuousRegion {
         #~~~~~~~~~~~~~~~
         # Samtools
         #~~~~~~~~~~~~~~~
-        cmd7= f"samtools sort \
+        samtools sort \
             ~{unmapped_aln_bam} \
-            -o unmapped_aln_sorted.bam"
+            -o unmapped_aln_sorted.bam
 
         samtools depth unmapped_aln_sorted.bam | awk '{if ($3>=5) print $0}'| awk '{ if ($2!=(ploc+1)) {if (ploc!=0){printf( "%s %d-%d\n",$1,s,ploc);}s=$2} ploc=$2; }' \
             > continuous_region.txt
