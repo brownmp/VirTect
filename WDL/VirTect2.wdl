@@ -324,6 +324,8 @@ task ContinuousRegion {
         File Human_Reference
         File GTF_Reference
 
+        Int Distance
+
         Int cpus
         Int preemptible
         String docker
@@ -358,6 +360,8 @@ task ContinuousRegion {
         import subprocess
         import os.path
         import fileinput
+
+        distance = ~{}
 
         print("The continous length")
         file =open("continuous_region.txt", "r")
@@ -441,6 +445,9 @@ workflow VirTect {
         File Virus_Reference
         File Human_Reference
         File GTF_Reference
+
+        # Distacne value 
+        Int Distance 
 
         #~~~~~~~~~~~~
         # References
@@ -542,6 +549,8 @@ workflow VirTect {
             Virus_Reference = Virus_Reference,
             Human_Reference = Human_Reference,
             GTF_Reference   = GTF_Reference,
+
+            Distance = Distance,
 
             cpus            = cpus,
             preemptible     = preemptible,
