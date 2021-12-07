@@ -224,8 +224,7 @@ task BWA {
         set -e
 
         # Untar the references  
-        tar -xvf ~{Human_Reference}
-        cp ~{Virus_Reference} .
+        tar -xvf ~{Virus_Reference}
 
 
         #~~~~~~~~~~~~~~~
