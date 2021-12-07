@@ -173,8 +173,7 @@ task bam2fastq {
         # Bedtools 
         #~~~~~~~~~~~~~~~
 
-        bedtools bamtofastq -i . \
-                unmapped_sorted.bam \
+        bedtools bamtofastq -i unmapped_sorted.bam \
                 -fq unmapped_sorted_1.fq \
                 -fq2 unmapped_sorted_2.fq
 
