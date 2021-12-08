@@ -450,17 +450,12 @@ workflow VirTect {
         File GTF_Reference
 
         # Distacne value 
-        Int Distance 
-
-        #~~~~~~~~~~~~
-        # References
-        #~~~~~~~~~~~~
-        #File ref_fasta
+        Int Distance = 200
 
         #~~~~~~~~~~~~
         # Cutting the adaptors 
         #~~~~~~~~~~~~
-        Boolean cut_adaptors
+        #Boolean cut_adaptors = false
 
         #~~~~~~~~~~~~
         # general runtime settings
@@ -479,23 +474,24 @@ workflow VirTect {
         docker:{help:"Docker image"}
     }
 
-    if(cut_adaptors) {
-        call RunCutadapt{
-            input:
-                fastq1 = left,
-                fastq2 = right,
-                cpus = cpus, 
-
-                preemptible = preemptible,
-                docker = docker,
-                sample_id = sample_id
-        }
-    }
+    ##~~~~~~~~~~~~
+    ## Cut the adaptors 
+    ##~~~~~~~~~~~~
+    #call RunCutadapt{
+    #    input:
+    #        fastq1 = left,
+    #        fastq2 = right,
+    #        cpus = cpus, 
+    #
+    #        preemptible = preemptible,
+    #        docker = docker,
+    #        sample_id = sample_id
+    #}
 
     call RunTopHat{
         input:
-            fastq1          = RunCutadapt.fastq1_out,
-            fastq2          = RunCutadapt.fastq2_out,
+            fastq1          = left,
+            fastq2          = right,
 
             Virus_Reference = Virus_Reference,
             Human_Reference = Human_Reference,
