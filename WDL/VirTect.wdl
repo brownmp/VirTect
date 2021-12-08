@@ -105,7 +105,7 @@ task RunTopHat {
         # TopHat
         #~~~~~~~~~~~~~~~
         tophat2 \
-            -o . \
+            -o ~{prefix} \
             -p ~{cpus} \
             -G ~{GTF_Reference} \
             GRCh38.genome \
@@ -115,13 +115,13 @@ task RunTopHat {
     >>>
 
     output {
-        File unmapped_bam = "unmapped.bam"
-        File accepted_hits_bam = "accepted_hits.bam"
-        File junctions_bed = "junctions.bed"
-        File deletions_bed = "deletions.bed"
-        File insertions_bed = "insertions.bed"
-        File align_summary_txt = "align_summary.txt"
-        File prep_reads_info = "prep_reads.info"
+        File unmapped_bam = "~{prefix}/unmapped.bam"
+        File accepted_hits_bam = "~{prefix}/accepted_hits.bam"
+        File junctions_bed = "~{prefix}/junctions.bed"
+        File deletions_bed = "~{prefix}/deletions.bed"
+        File insertions_bed = "~{prefix}/insertions.bed"
+        File align_summary_txt = "~{prefix}/align_summary.txt"
+        File prep_reads_info = "~{prefix}/prep_reads.info"
     }
 
     runtime {
@@ -167,21 +167,21 @@ task bam2fastq {
         #~~~~~~~~~~~~~~~
         samtools sort \
             -n ~{unmapped_bam} \
-            -o unmapped_sorted.bam
+            -o ~{prefix}_unmapped_sorted.bam
 
         #~~~~~~~~~~~~~~~
         # Bedtools 
         #~~~~~~~~~~~~~~~
 
-        bedtools bamtofastq -i unmapped_sorted.bam \
-                -fq unmapped_sorted_1.fq \
-                -fq2 unmapped_sorted_2.fq
+        bedtools bamtofastq -i ~{prefix}_unmapped_sorted.bam \
+                -fq ~{prefix}_unmapped_sorted_1.fq \
+                -fq2 ~{prefix}_unmapped_sorted_2.fq
 
     >>>
 
     output {
-        File unmapped_sorted_1 = "unmapped_sorted_1.fq"
-        File unmapped_sorted_2 = "unmapped_sorted_2.fq"
+        File unmapped_sorted_1 = "~{prefix}_unmapped_sorted_1.fq"
+        File unmapped_sorted_2 = "~{prefix}_unmapped_sorted_2.fq"
     }
 
     runtime {
@@ -235,12 +235,12 @@ task BWA {
             viruses_757.fasta \
             ~{unmapped_sorted_1} \
             ~{unmapped_sorted_2} \
-            > unmapped_aln.sam
+            > ~{prefix}_unmapped_aln.sam
 
     >>>
 
     output {
-        File unmapped_aln_sam = "unmapped_aln.sam"
+        File unmapped_aln_sam = "~{prefix}_unmapped_aln.sam"
     }
 
     runtime {
@@ -286,18 +286,18 @@ task VirusDetection {
         #~~~~~~~~~~~~~~~
         samtools view -Sb \
                 -h ~{unmapped_aln_sam} \
-                > unmapped_aln.bam
+                > ~{prefix}_unmapped_aln.bam
 
 
         samtools view \
-            unmapped_aln.bam | cut -f3 | sort | uniq -c | awk '{if ($1>=400) print $0}' \
-            > unmapped_viruses_count.txt
+            ~{prefix}_unmapped_aln.bam | cut -f3 | sort | uniq -c | awk '{if ($1>=400) print $0}' \
+            > ~{prefix}_unmapped_viruses_count.txt
 
     >>>
 
     output {
-        File unmapped_aln_bam = "unmapped_aln.bam"
-        File unmapped_viruses_count = "unmapped_viruses_count.txt"
+        File unmapped_aln_bam = "~{prefix}_unmapped_aln.bam"
+        File unmapped_viruses_count = "~{prefix}_unmapped_viruses_count.txt"
     }
 
     runtime {
@@ -346,10 +346,10 @@ task ContinuousRegion {
         #~~~~~~~~~~~~~~~
         samtools sort \
             ~{unmapped_aln_bam} \
-            -o unmapped_aln_sorted.bam
+            -o ~{prefix}_unmapped_aln_sorted.bam
 
-        samtools depth unmapped_aln_sorted.bam | awk '{if ($3>=5) print $0}'| awk '{ if ($2!=(ploc+1)) {if (ploc!=0){printf( "%s %d-%d\n",$1,s,ploc);}s=$2} ploc=$2; }' \
-            > continuous_region.txt
+        samtools depth ~{prefix}_unmapped_aln_sorted.bam | awk '{if ($3>=5) print $0}'| awk '{ if ($2!=(ploc+1)) {if (ploc!=0){printf( "%s %d-%d\n",$1,s,ploc);}s=$2} ploc=$2; }' \
+            > ~{prefix}_continuous_region.txt
 
 
         #~~~~~~~~~~~~~~~
@@ -367,8 +367,8 @@ task ContinuousRegion {
         distance = ~{Distance}
 
         print("The continous length")
-        file =open("continuous_region.txt", "r")
-        out_put =open("Final_continous_region.txt", "w")
+        file =open("~{prefix}_continuous_region.txt", "r")
+        out_put =open("~{prefix}_Final_continous_region.txt", "w")
         
         if (os.fstat(file.fileno()).st_size) >0:
                 for i in file.readlines():
@@ -387,11 +387,11 @@ task ContinuousRegion {
         out_put.close()
             
 
-        final_output=open("Final_continous_region.txt",'r')
+        final_output=open("~{prefix}_Final_continous_region.txt",'r')
         if (os.fstat(final_output.fileno()).st_size) >0 :
             print("----------------------------------------Note: The sample may have some real virus :(-----------------------------------------------------")
             headers = 'virus transcript_start transcript_end'.split()
-            for line in fileinput.input(['Final_continous_region.txt'], inplace=True):
+            for line in fileinput.input(['~{prefix}_Final_continous_region.txt'], inplace=True):
                 if fileinput.isfirstline():
                     print('\t'.join(headers))
                 print(line.strip())
@@ -403,8 +403,8 @@ task ContinuousRegion {
     >>>
 
     output {
-        File unmapped_aln_sorted_bam = "unmapped_aln_sorted.bam"
-        File continuous_region = "continuous_region.txt"
+        File unmapped_aln_sorted_bam = "~{prefix}_unmapped_aln_sorted.bam"
+        File continuous_region = "~{prefix}_continuous_region.txt"
     }
 
     runtime {
