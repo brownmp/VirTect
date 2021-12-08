@@ -51,10 +51,10 @@ task RunCutadapt {
 
     runtime {
         preemptible: preemptible
-        disks: "local-disk " + ceil(size(fastq1, "GB")*3 ) + " HDD"
+        disks: "local-disk " + ceil(size(fastq1, "GB") * 4.5 ) + " HDD"
         docker: docker
         cpu: 1
-        memory: "10GB"
+        memory: "30GB"
     }
 }
 
@@ -458,6 +458,11 @@ workflow VirTect {
         #File ref_fasta
 
         #~~~~~~~~~~~~
+        # Cutting the adaptors 
+        #~~~~~~~~~~~~
+        Boolean cut_adaptors
+
+        #~~~~~~~~~~~~
         # general runtime settings
         #~~~~~~~~~~~~
         Int preemptible = 2
@@ -474,15 +479,17 @@ workflow VirTect {
         docker:{help:"Docker image"}
     }
 
-    call RunCutadapt{
-        input:
-            fastq1 = left,
-            fastq2 = right,
-            cpus = cpus, 
+    if(cut_adaptors) {
+        call RunCutadapt{
+            input:
+                fastq1 = left,
+                fastq2 = right,
+                cpus = cpus, 
 
-            preemptible = preemptible,
-            docker = docker,
-            sample_id = sample_id
+                preemptible = preemptible,
+                docker = docker,
+                sample_id = sample_id
+        }
     }
 
     call RunTopHat{
