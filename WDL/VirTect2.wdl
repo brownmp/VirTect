@@ -352,6 +352,9 @@ task ContinuousRegion {
             > continuous_region.txt
 
 
+        #~~~~~~~~~~~~~~~
+        # Python 
+        #~~~~~~~~~~~~~~~
         python <<CODE
 
         import sys
