@@ -1,0 +1,13 @@
+{
+        "VirTect.docker":"brownmp/virtect:devel",
+        "VirTect.left":"",
+        "VirTect.right":"",
+        "VirTect.cpus":"10",
+        "VirTect.Virus_Reference":"VirTect/viruses_reference/viruses_757.tar.gz",
+        "VirTect.Human_Reference":"human_reference/GRCh38.tar.gz",
+        "VirTect.GTF_Reference":"human_reference/ref_annot.gtf",
+        "VirTect.preemptible":"2",
+        "VirTect.sample_id":"",
+        "VirTect.Distance":"200"
+
+}
