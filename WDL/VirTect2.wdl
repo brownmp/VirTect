@@ -387,11 +387,11 @@ task ContinuousRegion {
         out_put.close()
             
 
-        final_output=open("/Final_continous_region.txt",'r')
+        final_output=open("Final_continous_region.txt",'r')
         if (os.fstat(final_output.fileno()).st_size) >0 :
             print("----------------------------------------Note: The sample may have some real virus :(-----------------------------------------------------")
             headers = 'virus transcript_start transcript_end'.split()
-            for line in fileinput.input(['/Final_continous_region.txt'], inplace=True):
+            for line in fileinput.input(['Final_continous_region.txt'], inplace=True):
                 if fileinput.isfirstline():
                     print('\t'.join(headers))
                 print(line.strip())
