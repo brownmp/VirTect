@@ -138,7 +138,7 @@ def main():
         os.system(cmd2)    
 
         # cmd3='bedtools bamtofastq -i  '+out+'/unmapped_sorted.bam -fq  '+out+'/unmapped_sorted_1.fq -fq2  '+out+'/unmapped_sorted_2.fq'    
-        cmd3=f"bedtools bamtofastq -i {out} \
+        cmd3=f"bedtools bamtofastq -i \
                 {out}/unmapped_sorted.bam \
                 -fq {out}/unmapped_sorted_1.fq \
                 -fq2 {out}/unmapped_sorted_2.fq"  

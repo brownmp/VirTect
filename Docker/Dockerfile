@@ -31,9 +31,10 @@ RUN apt-get -qq update && apt-get -qq -y install --no-install-recommends \
     make \
     pbzip2 \
     pigz \
-    python3 \
+    python \
+    python-pip \
+    python-setuptools \
     python3-pip \
-    python3-setuptools \
     r-base \
     unzip \
     wget \
@@ -43,14 +44,18 @@ RUN apt-get -qq update && apt-get -qq -y install --no-install-recommends \
     zlibc
 
 # make python3 be the default python
-RUN ln -sf /usr/bin/python3 /usr/bin/python
+# RUN ln -sf /usr/bin/python3 /usr/bin/python
 
 
 #~~~~~~~~~~~
 # Python 
 #~~~~~~~~~~~
-RUN pip3 install --upgrade pip && pip install \
+RUN pip install --upgrade pip && pip install \
 	argparse==1.4.0 \
+    cutadapt
+
+RUN pip3 install --upgrade pip && pip3 install \
+    argparse==1.4.0 \
     cutadapt
 
 #~~~~~~~~~~~
@@ -109,16 +114,46 @@ RUN FASTQC_URL="https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc
 
 
 
+
+#~~~~~~~~~~~~~~
+# TopHat2
+#~~~~~~~~~~~~~~
+
+WORKDIR $SRC
+ENV TopHat2_VERSION=2.1.1
+# RUN wget https://ccb.jhu.edu/software/tophat/downloads/tophat-${TopHat2_VERSION}.OSX_x86_64.tar.gz && \
+RUN wget http://ccb.jhu.edu/software/tophat/downloads/tophat-${TopHat2_VERSION}.Linux_x86_64.tar.gz && \
+    tar zxvf tophat-${TopHat2_VERSION}.Linux_x86_64.tar.gz && \
+    cd $BIN && \
+    ln -s $SRC/tophat-${TopHat2_VERSION}.Linux_x86_64/tophat2 . 
+
+
+
+#~~~~~~~~~~~~~~
+# BowTie2
+#~~~~~~~~~~~~~~
+WORKDIR $SRC
+ENV Bowtie2_VERSION=2.4.4
+
+RUN wget https://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.4.4/bowtie2-2.4.4-source.zip && \
+    unzip bowtie2-2.4.4-source.zip && \
+    cd bowtie2-2.4.4 && \
+    make && \
+    cp -r * $BIN
+
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ## VirTect
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 WORKDIR $SRC
+ARG CACHEBUST=2
 RUN git clone https://github.com/brownmp/VirTect.git 
 
 
-#RUN wget -q https://raw.githubusercontent.com/klarman-cell-observatory/cumulus/master/docker/monitor_script.sh -O $SRC/CTAT-VirusIntegrationFinder/WDL/monitor_script.sh
-#RUN chmod a+rx $SRC/CTAT-VirusIntegrationFinder/WDL/monitor_script.sh
+# RUN wget -q https://raw.githubusercontent.com/klarman-cell-observatory/cumulus/master/docker/monitor_script.sh -O $SRC/CTAT-VirusIntegrationFinder/WDL/monitor_script.sh
+# RUN chmod a+rx $SRC/CTAT-VirusIntegrationFinder/WDL/monitor_script.sh
+
 
 RUN apt-get -qq -y remove automake build-essential cmake curl git gcc g++ wget && \
     apt-get -qq -y autoremove && \
