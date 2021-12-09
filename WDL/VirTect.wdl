@@ -126,10 +126,10 @@ task RunTopHat {
 
     runtime {
         preemptible: preemptible
-        disks: "local-disk " + ceil(size(fastq1, "GB")*3 ) + " HDD"
+        disks: "local-disk " + ceil(size(fastq1, "GB")*6 + size(GTF_Reference, "GB") + size(Human_Reference, "GB")*3 + size(Virus_Reference, "GB")*3 + 50) + " HDD"
         docker: docker
         cpu: cpus
-        memory: "10GB"
+        memory: "150GB"
     }
 }
 
@@ -186,10 +186,10 @@ task bam2fastq {
 
     runtime {
         preemptible: preemptible
-        disks: "local-disk " + ceil(size(unmapped_bam, "GB")*3 ) + " HDD"
+        disks: "local-disk " + ceil(size(unmapped_bam, "GB")*5 ) + " HDD"
         docker: docker
         cpu: cpus
-        memory: "10GB"
+        memory: "100GB"
     }
 }
 
@@ -245,7 +245,7 @@ task BWA {
 
     runtime {
         preemptible: preemptible
-        disks: "local-disk " + ceil(size(unmapped_sorted_1, "GB")*3 ) + " HDD"
+        disks: "local-disk " + ceil(size(unmapped_sorted_1, "GB")*3 + size(GTF_Reference, "GB") + size(Human_Reference, "GB")*3 + size(Virus_Reference, "GB")*3 ) + " HDD"
         docker: docker
         cpu: cpus
         memory: "10GB"
@@ -302,10 +302,10 @@ task VirusDetection {
 
     runtime {
         preemptible: preemptible
-        disks: "local-disk " + ceil(size(unmapped_aln_sam, "GB")*2 ) + " HDD"
+        disks: "local-disk " + ceil(size(unmapped_aln_sam, "GB")*2 + size(GTF_Reference, "GB") + size(Human_Reference, "GB")*3 + size(Virus_Reference, "GB")*3 ) + " HDD"
         docker: docker
         cpu: cpus
-        memory: "10GB"
+        memory: "100GB"
     }
 }
 
