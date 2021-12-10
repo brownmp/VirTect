@@ -96,19 +96,18 @@ task RunTopHat {
             mkdir fastq
             tar -I pigz -xvf ~{fastq1} -C fastq
             fastqs=$(find fastq -type f)
-            fastq1=$fastqs[0]
-            fastq2=$fastqs[1]
+            
+            #~~~~~~~~~~~~~~~
+            # TopHat
+            #~~~~~~~~~~~~~~~
+            tophat2 \
+                -o ~{prefix} \
+                -p ~{cpus} \
+                -G ~{GTF_Reference} \
+                GRCh38.genome \
+                fastqs[0] \
+                fastqs[1]
         fi
-        #~~~~~~~~~~~~~~~
-        # TopHat
-        #~~~~~~~~~~~~~~~
-        tophat2 \
-            -o ~{prefix} \
-            -p ~{cpus} \
-            -G ~{GTF_Reference} \
-            GRCh38.genome \
-            $fastq1 \
-            $fastq2
     >>>
 
     output {
