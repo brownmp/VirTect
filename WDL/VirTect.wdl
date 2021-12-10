@@ -37,8 +37,8 @@ task RunCutadapt {
 
 
         python3 /usr/local/src/VirTect/VerTect_cutadapt.py \
-                -1 ~{fastq1} \
-                -2 ~{fastq2} \
+                -1 $fastq1 \
+                -2 $fastq2 \
                 -F "AGATCGGAAGAG" \
                 -R "AGATCGGAAGAG" \
                 --cores ~{cpus}
@@ -88,6 +88,9 @@ task RunTopHat {
 
         set -e
 
+        # Untar the references  
+        tar -xvf ~{Human_Reference}
+
         # special case for tar of fastq files
         if [[ "~{fastq1}" == *.tar.gz ]] ; then
             mkdir fastq
@@ -96,11 +99,6 @@ task RunTopHat {
             fastq1=$fastqs[0]
             fastq2=$fastqs[1]
         fi
-        
-        
-        # Untar the references  
-        tar -xvf ~{Human_Reference}
-
         #~~~~~~~~~~~~~~~
         # TopHat
         #~~~~~~~~~~~~~~~
@@ -109,9 +107,8 @@ task RunTopHat {
             -p ~{cpus} \
             -G ~{GTF_Reference} \
             GRCh38.genome \
-            ~{fastq1} ~{fastq2}
-
-
+            $fastq1 \
+            $fastq2
     >>>
 
     output {
