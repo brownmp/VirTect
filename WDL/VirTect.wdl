@@ -61,9 +61,9 @@ task RunCutadapt {
 
 
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+####################################
 # create the task RunVirTect
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+####################################
 task RunTopHat {
     input {
         File fastq1
@@ -135,16 +135,12 @@ task RunTopHat {
 
 
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+####################################
 # create the task bam2fastq
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+####################################
+
 task bam2fastq {
     input {
-        
-        File Virus_Reference
-        File Human_Reference
-        File GTF_Reference
-
         File unmapped_bam
 
         Int cpus
@@ -172,23 +168,24 @@ task bam2fastq {
         #~~~~~~~~~~~~~~~
         # Bedtools 
         #~~~~~~~~~~~~~~~
-
-        bedtools bamtofastq -i ~{prefix}_unmapped_sorted.bam \
-                -fq ~{prefix}_unmapped_sorted_1.fq \
-                -fq2 ~{prefix}_unmapped_sorted_2.fq
+        bedtools bamtofastq \
+            -i ~{prefix}_unmapped_sorted.bam \
+            -fq ~{prefix}_unmapped_sorted_1.fq \
+            -fq2 ~{prefix}_unmapped_sorted_2.fq
 
     >>>
 
     output {
+        File unmapped_sorted_bam = "~{prefix}_unmapped_sorted.bam"
         File unmapped_sorted_1 = "~{prefix}_unmapped_sorted_1.fq"
         File unmapped_sorted_2 = "~{prefix}_unmapped_sorted_2.fq"
     }
 
     runtime {
         preemptible: preemptible
-        disks: "local-disk " + ceil(size(unmapped_bam, "GB")*5 ) + " HDD"
+        disks: "local-disk " + ceil(size(unmapped_bam, "GB")*6 + 50) + " HDD"
         docker: docker
-        cpu: cpus
+        cpu: 1
         memory: "100GB"
     }
 }
@@ -507,10 +504,6 @@ workflow VirTect {
         input:
         
             unmapped_bam = RunTopHat.unmapped_bam,
-
-            Virus_Reference = Virus_Reference,
-            Human_Reference = Human_Reference,
-            GTF_Reference   = GTF_Reference,
 
             cpus            = cpus,
             preemptible     = preemptible,
