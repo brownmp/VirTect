@@ -105,8 +105,7 @@ task RunTopHat {
                 -p ~{cpus} \
                 -G ~{GTF_Reference} \
                 GRCh38.genome \
-                fastqs[0] \
-                fastqs[1]
+                $fastqs
         fi
     >>>
 
