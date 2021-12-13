@@ -253,10 +253,6 @@ task VirusDetection {
         
         File unmapped_aln_sam
 
-        File Virus_Reference
-        File Human_Reference
-        File GTF_Reference
-
         Int cpus
         Int preemptible
         String docker
@@ -294,7 +290,7 @@ task VirusDetection {
 
     runtime {
         preemptible: preemptible
-        disks: "local-disk " + ceil(size(unmapped_aln_sam, "GB")*2 + size(GTF_Reference, "GB") + size(Human_Reference, "GB")*3 + size(Virus_Reference, "GB")*3 ) + " HDD"
+        disks: "local-disk " + ceil(size(unmapped_aln_sam, "GB")*4 ) + " HDD"
         docker: docker
         cpu: cpus
         memory: "100GB"
@@ -311,10 +307,6 @@ task ContinuousRegion {
     input {
         
         File unmapped_aln_bam
-
-        File Virus_Reference
-        File Human_Reference
-        File GTF_Reference
 
         Int Distance
 
@@ -526,10 +518,6 @@ workflow VirTect {
         input:
             unmapped_aln_sam = BWA.unmapped_aln_sam,
 
-            Virus_Reference = Virus_Reference,
-            Human_Reference = Human_Reference,
-            GTF_Reference   = GTF_Reference,
-
             cpus            = cpus,
             preemptible     = preemptible,
             docker          = docker,
@@ -539,10 +527,6 @@ workflow VirTect {
     call ContinuousRegion {
         input:
             unmapped_aln_bam = VirusDetection.unmapped_aln_bam,
-
-            Virus_Reference = Virus_Reference,
-            Human_Reference = Human_Reference,
-            GTF_Reference   = GTF_Reference,
 
             Distance = Distance,
 
