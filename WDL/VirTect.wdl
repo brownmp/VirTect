@@ -106,6 +106,18 @@ task RunTopHat {
                 -G ~{GTF_Reference} \
                 GRCh38.genome \
                 $fastqs
+
+        else
+            #~~~~~~~~~~~~~~~
+            # TopHat
+            #~~~~~~~~~~~~~~~
+            tophat2 \
+                -o ~{prefix} \
+                -p ~{cpus} \
+                -G ~{GTF_Reference} \
+                GRCh38.genome \
+                ~{fastq1} ~{fastq2}
+
         fi
     >>>
 
