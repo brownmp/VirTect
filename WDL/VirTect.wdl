@@ -27,7 +27,7 @@ task RunCutadapt {
         set -e
 
         # special case for tar of fastq files
-        if [[ "~{fastq1}" == *.tar.gz ]] ; then
+        if [[ "~{fastq1}" == *.tar.gz" ]]; then
             mkdir fastq
             tar -I pigz -xvf ~{fastq1} -C fastq
             fastqs=$(find fastq -type f)
@@ -92,7 +92,7 @@ task RunTopHat {
         tar -xvf ~{Human_Reference}
 
         # special case for tar of fastq files
-        if [[ "~{fastq1}" == *.tar.gz ]] ; then
+        if [[ "~{fastq1}" == *.tar.gz]] ; then
             mkdir fastq
             tar -I pigz -xvf ~{fastq1} -C fastq
             fastqs=$(find fastq -type f)
