@@ -27,7 +27,7 @@ task RunCutadapt {
         set -e
 
         # special case for tar of fastq files
-        if [[ "~{fastq1}" == *.tar.gz" ]]; then
+        if [[ "~{fastq1}" == *.tar.gz ]]; then
             mkdir fastq
             tar -I pigz -xvf ~{fastq1} -C fastq
             fastqs=$(find fastq -type f)
@@ -69,7 +69,6 @@ task RunTopHat {
         File fastq1
         File? fastq2
         
-        File Virus_Reference
         File Human_Reference
         File GTF_Reference
 
@@ -92,7 +91,7 @@ task RunTopHat {
         tar -xvf ~{Human_Reference}
 
         # special case for tar of fastq files
-        if [[ "~{fastq1}" == *.tar.gz]] ; then
+        if [[ "~{fastq1}" == *.tar.gz ]] ; then
             mkdir fastq
             tar -I pigz -xvf ~{fastq1} -C fastq
             fastqs=$(find fastq -type f)
@@ -133,7 +132,7 @@ task RunTopHat {
 
     runtime {
         preemptible: preemptible
-        disks: "local-disk " + ceil(size(fastq1, "GB")*6 + size(GTF_Reference, "GB") + size(Human_Reference, "GB")*3 + size(Virus_Reference, "GB")*3 + 50) + " HDD"
+        disks: "local-disk " + ceil(size(fastq1, "GB")*6 + size(GTF_Reference, "GB") + size(Human_Reference, "GB")*3 + 50) + " HDD"
         docker: docker
         cpu: cpus
         memory: "150GB"
@@ -209,13 +208,13 @@ task BWA {
         File unmapped_sorted_2
 
         File Virus_Reference
-        File Human_Reference
         File GTF_Reference
 
         Int cpus
         Int preemptible
         String docker
         String sample_id
+        String Virus_Fasta_Prefix
     }
 
     #~~~~~~~~~~~~~~~~~
@@ -236,7 +235,7 @@ task BWA {
         #~~~~~~~~~~~~~~~
 
         bwa mem \
-            viruses_757.fasta \
+            ~{Virus_Fasta_Prefix}.fasta \
             ~{unmapped_sorted_1} \
             ~{unmapped_sorted_2} \
             > ~{prefix}_unmapped_aln.sam
@@ -249,7 +248,7 @@ task BWA {
 
     runtime {
         preemptible: preemptible
-        disks: "local-disk " + ceil(size(unmapped_sorted_1, "GB")*3 + size(GTF_Reference, "GB") + size(Human_Reference, "GB")*3 + size(Virus_Reference, "GB")*3 ) + " HDD"
+        disks: "local-disk " + ceil(size(unmapped_sorted_1, "GB")*3 + size(GTF_Reference, "GB") + size(Virus_Reference, "GB")*3 ) + " HDD"
         docker: docker
         cpu: cpus
         memory: "10GB"
@@ -401,6 +400,7 @@ task ContinuousRegion {
     output {
         File unmapped_aln_sorted_bam = "~{prefix}_unmapped_aln_sorted.bam"
         File continuous_region = "~{prefix}_continuous_region.txt"
+        File Final_continuous_region = "~{prefix}_Final_continous_region.txt"
     }
 
     runtime {
@@ -426,6 +426,9 @@ workflow VirTect {
         # Sample ID
         #~~~~~~~~~~~~
         String sample_id
+
+        # Prefix for the virus fasta file
+        String Virus_Fasta_Prefix
       
         #~~~~~~~~~~~~
         # FASTQ Files
@@ -489,7 +492,7 @@ workflow VirTect {
             fastq1          = left,
             fastq2          = right,
 
-            Virus_Reference = Virus_Reference,
+            #Virus_Reference = Virus_Reference,
             Human_Reference = Human_Reference,
             GTF_Reference   = GTF_Reference,
 
@@ -517,13 +520,14 @@ workflow VirTect {
             unmapped_sorted_2 = bam2fastq.unmapped_sorted_2,
 
             Virus_Reference = Virus_Reference,
-            Human_Reference = Human_Reference,
+            #Human_Reference = Human_Reference,
             GTF_Reference   = GTF_Reference,
 
             cpus            = cpus,
             preemptible     = preemptible,
             docker          = docker,
-            sample_id       = sample_id
+            sample_id       = sample_id,
+            Virus_Fasta_Prefix = Virus_Fasta_Prefix
     }
 
     call VirusDetection {
